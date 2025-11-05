@@ -40,7 +40,7 @@ async def other_tools():
     push_tool = Tool(name="send_push_notification", func=push, description="Use this tool when you want to send a push notification")
     file_tools = get_file_tools()
 
-    tool_search =Tool(
+    search_tool =Tool(
         name="search",
         func=serper.run,
         description="Use this tool when you want to get the results of an online web search"
@@ -51,5 +51,5 @@ async def other_tools():
 
     python_repl = PythonREPLTool()
     
-    return file_tools + [push_tool, tool_search, python_repl,  wiki_tool]
+    return file_tools + [push_tool, search_tool, python_repl,  wiki_tool]
 
