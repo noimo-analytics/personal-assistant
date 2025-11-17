@@ -174,3 +174,11 @@ cython_debug/
 .pypirc
 
 .DS_Store
+
+# Custom files and folders
+credentials.json
+outputs/*.*
+token.json
+config.py
+app_folder/credentials.json
+app_folder/token.json

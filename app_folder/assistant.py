@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import List, Any, Optional, Dict, Annotated
 from typing_extensions import TypedDict
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph.message import add_messages
@@ -9,7 +9,7 @@ from langgraph.checkpoint.memory import MemorySaver
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from typing import List, Any, Optional, Dict
 from pydantic import BaseModel, Field
-from assistant_tools import playwright_tools, other_tools
+from assistant_tools import playwright_tools, other_tools, calendar_tools
 import uuid
 import asyncio
 from datetime import datetime
@@ -22,6 +22,7 @@ class State(TypedDict):
     feedback_on_work: Optional[str]
     success_criteria_met: bool
     user_input_needed: bool
+    subtasks: Optional[List[str]]
 
 
 class EvaluatorOutput(BaseModel):
@@ -45,8 +46,15 @@ class Assistant:
     async def setup(self):
         self.tools, self.browser, self.playwright = await playwright_tools()
         self.tools += await other_tools()
+        self.tools += calendar_tools()
         worker_llm = ChatOpenAI(model="gpt-4o-mini")
         self.worker_llm_with_tools = worker_llm.bind_tools(self.tools)
+        planner_llm = ChatOpenAI(model="gpt-4o-mini", system_message="You are PlannerAgent: decompose tasks into subtasks.")
+        research_llm = ChatOpenAI(model="gpt-4o-mini", system_message="You are ResearchAgent: retrieve facts and summaries.")
+        code_llm = ChatOpenAI(model="gpt-4o-mini", system_message="You are CodeAgent: write and debug code.")
+        self.planner  = planner_llm.bind_tools(self.tools)
+        self.research = research_llm.bind_tools(self.tools)
+        self.code     = code_llm.bind_tools(self.tools)
         evaluator_llm = ChatOpenAI(model="gpt-4o-mini")
         self.evaluator_llm_with_output = evaluator_llm.with_structured_output(EvaluatorOutput)
         await self.build_graph()
