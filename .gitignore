@@ -179,6 +179,3 @@ cython_debug/
 credentials.json
 app_folder/outputs/*.*
 token.json
-config.py
-app_folder/credentials.json
-app_folder/token.json
