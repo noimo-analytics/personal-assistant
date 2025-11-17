@@ -177,7 +177,7 @@ cython_debug/
 
 # Custom files and folders
 credentials.json
-outputs/*.*
+app_folder/outputs/*.*
 token.json
 config.py
 app_folder/credentials.json
