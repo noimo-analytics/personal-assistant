@@ -32,7 +32,12 @@ The integrated tooling enables the assistant to handle complex, multi-step tasks
    - Send push notifications via Pushover
    - Alert users when tasks are complete or require attention
 
-### 5. **Complex Multi-Step Workflows**
+### 5. **Google Calendar Manafer**
+   - Add events to Google Calendar
+   - List events from Google Calendar
+
+
+### 6. **Complex Multi-Step Workflows**
    The assistant excels at combining these capabilities:
    - Research a topic online, compile findings into a document, and notify you
    - Scrape web data, process it with Python, and save results
@@ -69,7 +74,7 @@ The integrated tooling enables the assistant to handle complex, multi-step tasks
 
 4. **Set up environment variables**
 
-   Create a `.env` file in the root directory:
+   Create a `.env` file in the `app_folder` directory:
    ```env
    OPENAI_API_KEY=your_openai_api_key_here
    PUSHOVER_TOKEN=your_pushover_token_here  
@@ -82,10 +87,18 @@ The integrated tooling enables the assistant to handle complex, multi-step tasks
    LANGSMITH_ENDPOINT=https://eu.api.smith.langchain.com
    LANGCHAIN_API_KEY=your_langsmith_api_key_here
    LANGCHAIN_PROJECT=your_langchain_project_here
+   # Google Calendar
+   GOOGLE_TOKEN_PATH=token.json
+   GOOGLE_CALENDAR_ID=primary
+   # Timezone for RFC3339 formatting
+   TIMEZONE_OFFSET=+05:30
    ```
+5. **Configure Coolge Calendar**
+   - **Enable the Calendar API** in Google Cloud Console.
+   - Download your OAuth **client_secrets** file and save as `credentials.json` in the root.
+   - Run `config.py` script to authorize and generate `token.json`
 
-
-5. **Run the application**
+6. **Run the application**
    ```bash
    cd app_folder
    uv run app.py
@@ -129,9 +142,13 @@ personal-assistant/
 │   ├── app.py              # Gradio UI and main application entry point
 │   ├── assistant.py        # Core Assistant class with LangGraph workflow
 │   ├── assistant_tools.py  # Tool definitions (Playwright, Python REPL, etc.)
-│   └── outputs/            # Directory for generated files
+│   ├── outputs/            # Directory for generated files
+│   ├── .env                # Environment variables
+│   ├── token.json          # OAuth tokens (auto-generated)
+├── config.py               # Generate token for Google Calendar intergration   
+├── credentials.json        # OAuth client secrets
 ├── pyproject.toml          # Project dependencies and configuration
-└── README.md              # This file
+└── README.md               # This file
 ```
 
 ## Technologies
